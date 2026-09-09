@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row mb-4">
+    <div class="col">
+        <h3><i class="fas fa-cog me-2" style="color:#2563a8"></i>Admin Dashboard</h3>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card p-3 text-center">
+            <h2 class="text-primary">{{ users|length }}</h2>
+            <p class="text-muted mb-0">Total Users</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3 text-center">
+            <h2 class="text-primary">{{ total_scans }}</h2>
+            <p class="text-muted mb-0">Total Scans</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3 text-center">
+            <h2 class="text-danger">{{ attack_scans }}</h2>
+            <p class="text-muted mb-0">Attacks Detected</p>
+        </div>
+    </div>
+</div>
+
+<!-- Users Table -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-users me-2"></i>Users Management
+    </div>
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <span class="badge bg-{{ 'warning' if user.role == 'admin' else 'secondary' }}">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-{{ 'success' if user.is_active else 'danger' }}">
+                            {{ 'Active' if user.is_active else 'Disabled' }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if user.role != 'admin' %}
+                        <a href="/admin/toggle/{{ user.id }}"
+                           class="btn btn-sm btn-{{ 'warning' if user.is_active else 'success' }}">
+                            {{ 'Disable' if user.is_active else 'Enable' }}
+                        </a>
+                        <a href="/admin/delete/{{ user.id }}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Delete this user?')">
+                            Delete
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Recent Scans -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-history me-2"></i>Recent Scans
+    </div>
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Time</th>
+                    <th>RF</th>
+                    <th>GB</th>
+                    <th>Verdict</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for scan in scans %}
+                <tr>
+                    <td>{{ scan.user.name }}</td>
+                    <td class="text-muted small">
+                        {{ scan.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </td>
+                    <td>
+                        <span class="badge bg-{{ 'danger' if scan.rf_result == 'ATTACK' else 'success' }}">
+                            {{ scan.rf_result }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-{{ 'danger' if scan.gb_result == 'ATTACK' else 'success' }}">
+                            {{ scan.gb_result }}
+                        </span>
+                    </td>
+                    <td class="fw-bold text-{{ 'danger' if scan.verdict != 'NORMAL' else 'success' }}">
+                        {{ scan.verdict }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

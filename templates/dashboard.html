@@ -1,0 +1,457 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="margin-bottom:32px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div>
+            <div style="font-size:13px;color:#64748b;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">
+                Network Security Console
+            </div>
+            <h1 style="font-size:26px;font-weight:800;color:#f1f5f9;letter-spacing:-0.5px;margin:0;">
+                Welcome back, {{ current_user.name }}
+            </h1>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:8px;padding:8px 14px;">
+            <span style="width:8px;height:8px;background:#10b981;border-radius:50%;display:inline-block;animation:pulse 2s infinite;"></span>
+            <span style="font-size:13px;color:#34d399;font-weight:500;">System Online</span>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:28px;">
+    <div style="background:#0d1526;border:1px solid #1e3a5f;border-radius:12px;padding:16px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#3b82f6,transparent);"></div>
+        <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px;">RF Accuracy</div>
+        <div style="font-size:24px;font-weight:800;color:#3b82f6;letter-spacing:-1px;">98.84%</div>
+        <div style="font-size:11px;color:#64748b;margin-top:4px;">Random Forest</div>
+    </div>
+    <div style="background:#0d1526;border:1px solid #1e3a5f;border-radius:12px;padding:16px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#10b981,transparent);"></div>
+        <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px;">GB Accuracy</div>
+        <div style="font-size:24px;font-weight:800;color:#10b981;letter-spacing:-1px;">98.03%</div>
+        <div style="font-size:11px;color:#64748b;margin-top:4px;">Gradient Boosting</div>
+    </div>
+    <div style="background:#0d1526;border:1px solid #1e3a5f;border-radius:12px;padding:16px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#8b5cf6,transparent);"></div>
+        <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px;">Total Scans</div>
+        <div style="font-size:24px;font-weight:800;color:#8b5cf6;letter-spacing:-1px;">{{ scans|length }}</div>
+        <div style="font-size:11px;color:#64748b;margin-top:4px;">Your analyses</div>
+    </div>
+    <div style="background:#0d1526;border:1px solid #1e3a5f;border-radius:12px;padding:16px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#f59e0b,transparent);"></div>
+        <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px;">Dataset</div>
+        <div style="font-size:24px;font-weight:800;color:#f59e0b;letter-spacing:-1px;">175K</div>
+        <div style="font-size:11px;color:#64748b;margin-top:4px;">UNSW-NB15 Records</div>
+    </div>
+</div>
+
+<!-- Main Grid -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+
+    <!-- Left: Input Panel -->
+    <div style="background:#0d1526;border:1px solid #1a2744;border-radius:14px;overflow:hidden;">
+        <!-- Panel Header -->
+        <div style="padding:16px 20px;border-bottom:1px solid #1a2744;display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:32px;height:32px;background:rgba(59,130,246,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-tower-broadcast" style="color:#3b82f6;font-size:13px;"></i>
+                </div>
+                <div>
+                    <div style="font-size:14px;font-weight:600;color:#f1f5f9;">Traffic Analyzer</div>
+                    <div style="font-size:11px;color:#64748b;">Input network packet data</div>
+                </div>
+            </div>
+            <div style="font-size:11px;color:#64748b;background:#0a0f1e;border:1px solid #1a2744;border-radius:6px;padding:4px 10px;">
+                UNSW-NB15
+            </div>
+        </div>
+
+        <div style="padding:20px;">
+            <!-- Input Grid -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+                <div>
+                    <label style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">
+                        Duration (sec)
+                    </label>
+                    <input type="number" id="duration" value="0.5" step="0.1" style="width:100%;background:#0a0f1e;border:1px solid #1a2744;border-radius:8px;color:#f1f5f9;font-size:14px;padding:10px 12px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#1a2744'">
+                </div>
+                <div>
+                    <label style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">
+                        Source Packets
+                    </label>
+                    <input type="number" id="src_pkts" value="6" style="width:100%;background:#0a0f1e;border:1px solid #1a2744;border-radius:8px;color:#f1f5f9;font-size:14px;padding:10px 12px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#1a2744'">
+                </div>
+                <div>
+                    <label style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">
+                        Dest Packets
+                    </label>
+                    <input type="number" id="dst_pkts" value="4" style="width:100%;background:#0a0f1e;border:1px solid #1a2744;border-radius:8px;color:#f1f5f9;font-size:14px;padding:10px 12px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#1a2744'">
+                </div>
+                <div>
+                    <label style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">
+                        Source Bytes
+                    </label>
+                    <input type="number" id="src_bytes" value="258" style="width:100%;background:#0a0f1e;border:1px solid #1a2744;border-radius:8px;color:#f1f5f9;font-size:14px;padding:10px 12px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#1a2744'">
+                </div>
+                <div>
+                    <label style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">
+                        Dest Bytes
+                    </label>
+                    <input type="number" id="dst_bytes" value="172" style="width:100%;background:#0a0f1e;border:1px solid #1a2744;border-radius:8px;color:#f1f5f9;font-size:14px;padding:10px 12px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#1a2744'">
+                </div>
+                <div>
+                    <label style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">
+                        Rate (pkt/sec)
+                    </label>
+                    <input type="number" id="rate" value="74" style="width:100%;background:#0a0f1e;border:1px solid #1a2744;border-radius:8px;color:#f1f5f9;font-size:14px;padding:10px 12px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#1a2744'">
+                </div>
+            </div>
+
+            <!-- Analyze Button -->
+            <button onclick="analyze()" id="analyzeBtn" style="width:100%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;margin-bottom:14px;box-shadow:0 4px 12px rgba(59,130,246,0.3);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(59,130,246,0.4)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 12px rgba(59,130,246,0.3)'">
+                <i class="fas fa-magnifying-glass-chart"></i>
+                Run Analysis
+            </button>
+
+            <!-- Scenario Buttons -->
+            <div style="margin-bottom:4px;">
+                <div style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Quick Scenarios</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                    <button onclick="loadNormal()" style="background:#0a0f1e;border:1px solid rgba(16,185,129,0.3);border-radius:7px;color:#34d399;font-size:12px;font-weight:500;padding:8px 4px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(16,185,129,0.1)'" onmouseout="this.style.background='#0a0f1e'">
+                        <i class="fas fa-circle-check" style="display:block;font-size:14px;margin-bottom:4px;"></i>
+                        Normal
+                    </button>
+                    <button onclick="loadDoS()" style="background:#0a0f1e;border:1px solid rgba(239,68,68,0.3);border-radius:7px;color:#f87171;font-size:12px;font-weight:500;padding:8px 4px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background='#0a0f1e'">
+                        <i class="fas fa-bolt" style="display:block;font-size:14px;margin-bottom:4px;"></i>
+                        DoS Attack
+                    </button>
+                    <button onclick="loadRecon()" style="background:#0a0f1e;border:1px solid rgba(245,158,11,0.3);border-radius:7px;color:#fbbf24;font-size:12px;font-weight:500;padding:8px 4px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(245,158,11,0.1)'" onmouseout="this.style.background='#0a0f1e'">
+                        <i class="fas fa-radar" style="display:block;font-size:14px;margin-bottom:4px;"></i>
+                        Recon
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Results Panel -->
+    <div style="background:#0d1526;border:1px solid #1a2744;border-radius:14px;overflow:hidden;">
+        <div style="padding:16px 20px;border-bottom:1px solid #1a2744;display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;background:rgba(139,92,246,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-chart-gantt" style="color:#8b5cf6;font-size:13px;"></i>
+            </div>
+            <div>
+                <div style="font-size:14px;font-weight:600;color:#f1f5f9;">Detection Results</div>
+                <div style="font-size:11px;color:#64748b;">ML model output</div>
+            </div>
+        </div>
+
+        <div style="padding:20px;">
+
+            <!-- Idle State -->
+            <div id="idle-state" style="height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+                <div style="width:64px;height:64px;background:#0a0f1e;border:2px dashed #1a2744;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+                    <i class="fas fa-wave-square" style="color:#1a2744;font-size:24px;"></i>
+                </div>
+                <div style="font-size:15px;font-weight:600;color:#1e3a5f;margin-bottom:6px;">No Analysis Yet</div>
+                <div style="font-size:13px;color:#334155;">Enter traffic values and click<br>Run Analysis to get results</div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading-state" style="height:320px;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+                <div style="width:48px;height:48px;border:3px solid #1a2744;border-top-color:#3b82f6;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:16px;"></div>
+                <div style="font-size:14px;color:#64748b;font-weight:500;">Analyzing traffic...</div>
+            </div>
+
+            <!-- Results State -->
+            <div id="result-state" style="display:none;">
+
+                <!-- Verdict Banner -->
+                <div id="verdict-banner" style="border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+                    <div id="verdict-icon" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i id="verdict-icon-i" class="fas fa-shield-check" style="font-size:16px;"></i>
+                    </div>
+                    <div>
+                        <div id="verdict-title" style="font-size:15px;font-weight:700;"></div>
+                        <div id="verdict-sub" style="font-size:12px;opacity:0.7;margin-top:1px;"></div>
+                    </div>
+                    <div id="verdict-badge" style="margin-left:auto;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;"></div>
+                </div>
+
+                <!-- Model Results -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+                    <div id="rf-card" style="background:#0a0f1e;border:1px solid #1a2744;border-radius:10px;padding:14px;">
+                        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px;">
+                            <i class="fas fa-tree" style="margin-right:4px;"></i>Random Forest
+                        </div>
+                        <div id="rf-result-text" style="font-size:16px;font-weight:700;margin-bottom:4px;"></div>
+                        <div style="background:#1a2744;border-radius:4px;height:4px;margin-bottom:4px;">
+                            <div id="rf-bar" style="height:4px;border-radius:4px;transition:width 0.8s ease;"></div>
+                        </div>
+                        <div id="rf-conf" style="font-size:11px;color:#64748b;"></div>
+                    </div>
+                    <div id="gb-card" style="background:#0a0f1e;border:1px solid #1a2744;border-radius:10px;padding:14px;">
+                        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px;">
+                            <i class="fas fa-chart-line" style="margin-right:4px;"></i>Gradient Boost
+                        </div>
+                        <div id="gb-result-text" style="font-size:16px;font-weight:700;margin-bottom:4px;"></div>
+                        <div style="background:#1a2744;border-radius:4px;height:4px;margin-bottom:4px;">
+                            <div id="gb-bar" style="height:4px;border-radius:4px;transition:width 0.8s ease;"></div>
+                        </div>
+                        <div id="gb-conf" style="font-size:11px;color:#64748b;"></div>
+                    </div>
+                </div>
+
+                <!-- Details -->
+                <div style="background:#0a0f1e;border:1px solid #1a2744;border-radius:10px;overflow:hidden;">
+                    <div style="padding:10px 14px;border-bottom:1px solid #1a2744;">
+                        <span style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Threat Intelligence</span>
+                    </div>
+                    <div style="padding:4px 0;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(26,39,68,0.5);">
+                            <span style="font-size:12px;color:#64748b;font-weight:500;">Attack Classification</span>
+                            <span id="attack-type" style="font-size:12px;font-weight:600;color:#f1f5f9;"></span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(26,39,68,0.5);">
+                            <span style="font-size:12px;color:#64748b;font-weight:500;">MITRE ATT&CK</span>
+                            <span id="mitre" style="font-size:12px;font-weight:600;"></span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;">
+                            <span style="font-size:12px;color:#64748b;font-weight:500;">Recommended Action</span>
+                            <span id="action" style="font-size:12px;font-weight:600;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scan History -->
+<div style="background:#0d1526;border:1px solid #1a2744;border-radius:14px;overflow:hidden;">
+    <div style="padding:16px 20px;border-bottom:1px solid #1a2744;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;background:rgba(245,158,11,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-rectangle-history" style="color:#f59e0b;font-size:13px;"></i>
+            </div>
+            <div>
+                <div style="font-size:14px;font-weight:600;color:#f1f5f9;">Scan History</div>
+                <div style="font-size:11px;color:#64748b;">Recent 10 analyses</div>
+            </div>
+        </div>
+        <span style="font-size:12px;color:#64748b;background:#0a0f1e;border:1px solid #1a2744;border-radius:6px;padding:4px 10px;">{{ scans|length }} records</span>
+    </div>
+
+    {% if scans %}
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="border-bottom:1px solid #1a2744;">
+                    <th style="padding:11px 16px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;text-align:left;">Timestamp</th>
+                    <th style="padding:11px 16px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;text-align:left;">Src Pkts</th>
+                    <th style="padding:11px 16px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;text-align:left;">Rate</th>
+                    <th style="padding:11px 16px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;text-align:left;">RF</th>
+                    <th style="padding:11px 16px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;text-align:left;">GB</th>
+                    <th style="padding:11px 16px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;text-align:left;">Verdict</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for scan in scans %}
+                <tr style="border-bottom:1px solid rgba(26,39,68,0.5);transition:background 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.03)'" onmouseout="this.style.background='transparent'">
+                    <td style="padding:12px 16px;font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;">
+                        {{ scan.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </td>
+                    <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">{{ scan.src_pkts }}</td>
+                    <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">{{ scan.rate }}</td>
+                    <td style="padding:12px 16px;">
+                        <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase;
+                            {% if scan.rf_result == 'ATTACK' %}
+                            background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25);
+                            {% else %}
+                            background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25);
+                            {% endif %}
+                        ">{{ scan.rf_result }}</span>
+                    </td>
+                    <td style="padding:12px 16px;">
+                        <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase;
+                            {% if scan.gb_result == 'ATTACK' %}
+                            background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25);
+                            {% else %}
+                            background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25);
+                            {% endif %}
+                        ">{{ scan.gb_result }}</span>
+                    </td>
+                    <td style="padding:12px 16px;">
+                        <span style="font-size:12px;font-weight:700;
+                            {% if scan.verdict == 'CRITICAL THREAT' %}color:#ef4444;
+                            {% elif scan.verdict == 'SUSPICIOUS' %}color:#f59e0b;
+                            {% else %}color:#10b981;{% endif %}
+                        ">{{ scan.verdict }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="padding:48px;text-align:center;">
+        <div style="width:48px;height:48px;background:#0a0f1e;border:2px dashed #1a2744;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+            <i class="fas fa-inbox" style="color:#1e3a5f;font-size:18px;"></i>
+        </div>
+        <div style="font-size:14px;color:#1e3a5f;font-weight:600;">No scans yet</div>
+        <div style="font-size:13px;color:#334155;margin-top:4px;">Run your first analysis above</div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(0.8); }
+}
+@keyframes slideIn {
+    from { opacity:0; transform:translateY(10px); }
+    to { opacity:1; transform:translateY(0); }
+}
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function loadNormal()  { setVals(0.5, 6, 4, 258, 172, 74); }
+function loadDoS()     { setVals(0, 1000, 0, 50000, 0, 5000); }
+function loadRecon()   { setVals(0.1, 100, 2, 1200, 40, 800); }
+
+function setVals(d, sp, dp, sb, db, r) {
+    document.getElementById('duration').value  = d;
+    document.getElementById('src_pkts').value  = sp;
+    document.getElementById('dst_pkts').value  = dp;
+    document.getElementById('src_bytes').value = sb;
+    document.getElementById('dst_bytes').value = db;
+    document.getElementById('rate').value      = r;
+}
+
+async function analyze() {
+    const btn = document.getElementById('analyzeBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+
+    document.getElementById('idle-state').style.display    = 'none';
+    document.getElementById('result-state').style.display  = 'none';
+    document.getElementById('loading-state').style.display = 'flex';
+
+    const data = {
+        duration:  document.getElementById('duration').value,
+        src_pkts:  document.getElementById('src_pkts').value,
+        dst_pkts:  document.getElementById('dst_pkts').value,
+        src_bytes: document.getElementById('src_bytes').value,
+        dst_bytes: document.getElementById('dst_bytes').value,
+        rate:      document.getElementById('rate').value
+    };
+
+    try {
+        const res  = await fetch('/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const json = await res.json();
+
+        document.getElementById('loading-state').style.display = 'none';
+        const rs = document.getElementById('result-state');
+        rs.style.display = 'block';
+        rs.style.animation = 'slideIn 0.35s ease forwards';
+
+        const isAttack = json.verdict !== 'NORMAL';
+        const isCrit   = json.verdict === 'CRITICAL THREAT';
+
+        // Verdict Banner
+        const banner = document.getElementById('verdict-banner');
+        const vTitle  = document.getElementById('verdict-title');
+        const vSub    = document.getElementById('verdict-sub');
+        const vBadge  = document.getElementById('verdict-badge');
+        const vIcon   = document.getElementById('verdict-icon');
+        const vIconI  = document.getElementById('verdict-icon-i');
+
+        if (isCrit) {
+            banner.style.cssText += 'background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);';
+            vTitle.style.color = '#f87171';
+            vTitle.textContent = 'Critical Threat Detected';
+            vSub.textContent   = 'Immediate action required';
+            vBadge.textContent = 'CRITICAL';
+            vBadge.style.cssText = 'background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);margin-left:auto;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;';
+            vIcon.style.background  = 'rgba(239,68,68,0.15)';
+            vIconI.style.color      = '#f87171';
+            vIconI.className        = 'fas fa-shield-exclamation';
+        } else if (isAttack) {
+            banner.style.cssText += 'background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);';
+            vTitle.style.color = '#fbbf24';
+            vTitle.textContent = 'Suspicious Activity';
+            vSub.textContent   = 'Monitor and investigate';
+            vBadge.textContent = 'WARNING';
+            vBadge.style.cssText = 'background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);margin-left:auto;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;';
+            vIcon.style.background  = 'rgba(245,158,11,0.15)';
+            vIconI.style.color      = '#fbbf24';
+            vIconI.className        = 'fas fa-triangle-exclamation';
+        } else {
+            banner.style.cssText += 'background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);';
+            vTitle.style.color = '#34d399';
+            vTitle.textContent = 'Traffic is Normal';
+            vSub.textContent   = 'No threats detected';
+            vBadge.textContent = 'SAFE';
+            vBadge.style.cssText = 'background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);margin-left:auto;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;';
+            vIcon.style.background  = 'rgba(16,185,129,0.15)';
+            vIconI.style.color      = '#34d399';
+            vIconI.className        = 'fas fa-shield-check';
+        }
+
+        // RF Card
+        const rfIsAttack = json.rf_result === 'ATTACK';
+        const rfColor    = rfIsAttack ? '#f87171' : '#34d399';
+        document.getElementById('rf-result-text').style.color    = rfColor;
+        document.getElementById('rf-result-text').textContent    = json.rf_result;
+        document.getElementById('rf-bar').style.width            = json.rf_confidence + '%';
+        document.getElementById('rf-bar').style.background       = rfColor;
+        document.getElementById('rf-conf').textContent           = 'Confidence: ' + json.rf_confidence + '%';
+
+        // GB Card
+        const gbIsAttack = json.gb_result === 'ATTACK';
+        const gbColor    = gbIsAttack ? '#f87171' : '#34d399';
+        document.getElementById('gb-result-text').style.color    = gbColor;
+        document.getElementById('gb-result-text').textContent    = json.gb_result;
+        document.getElementById('gb-bar').style.width            = json.gb_confidence + '%';
+        document.getElementById('gb-bar').style.background       = gbColor;
+        document.getElementById('gb-conf').textContent           = 'Confidence: ' + json.gb_confidence + '%';
+
+        // Details
+        document.getElementById('attack-type').textContent = json.attack_type;
+
+        const mitreEl = document.getElementById('mitre');
+        mitreEl.innerHTML = `<code style="background:rgba(59,130,246,0.1);color:#60a5fa;padding:2px 8px;border-radius:4px;font-size:11px;">${json.mitre}</code>`;
+
+        const actionEl = document.getElementById('action');
+        if (isCrit) {
+            actionEl.textContent  = 'Block connection';
+            actionEl.style.color  = '#f87171';
+        } else if (isAttack) {
+            actionEl.textContent  = 'Investigate';
+            actionEl.style.color  = '#fbbf24';
+        } else {
+            actionEl.textContent  = 'Allow traffic';
+            actionEl.style.color  = '#34d399';
+        }
+
+    } catch(e) {
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('idle-state').style.display    = 'flex';
+        alert('Analysis failed. Please try again.');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-magnifying-glass-chart"></i> Run Analysis';
+}
+</script>
+{% endblock %}

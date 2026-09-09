@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+@keyframes pulse {
+    0%, 100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(0.8); }
+}
+</style>
+
+<!-- Hero -->
+<div style="text-align:center; padding:80px 20px 60px;">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);border-radius:20px;padding:6px 16px;font-size:13px;color:#60a5fa;font-weight:500;margin-bottom:28px;">
+        <span style="width:7px;height:7px;background:#10b981;border-radius:50%;display:inline-block;animation:pulse 2s infinite;"></span>
+        UNSW-NB15 Dataset &middot; 175,341 Records &middot; Real-Time Detection
+    </div>
+
+    <h1 style="font-size:clamp(36px,6vw,64px);font-weight:800;letter-spacing:-2px;line-height:1.1;margin-bottom:20px;background:linear-gradient(135deg,#f1f5f9 0%,#94a3b8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+        Network Intrusion<br>Detection System
+    </h1>
+
+    <p style="font-size:17px;color:#64748b;max-width:520px;margin:0 auto 40px;line-height:1.7;">
+        Machine learning-powered threat detection for e-commerce infrastructure.
+        Identify attacks in real time with 98.84% accuracy.
+    </p>
+
+    {% if current_user.is_authenticated %}
+    <a href="/dashboard" class="btn btn-primary" style="padding:14px 32px;font-size:15px;">
+        <i class="fas fa-chart-line"></i> Open Dashboard
+    </a>
+    {% else %}
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/register" class="btn btn-primary" style="padding:14px 32px;font-size:15px;">
+            Get Started Free
+        </a>
+        <a href="/login" class="btn btn-outline" style="padding:14px 28px;font-size:15px;">
+            Sign in
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Stats -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:48px;">
+    <a href="/dashboard" style="text-decoration:none;">
+        <div class="stat-card" style="cursor:pointer;">
+            <div class="stat-icon blue"><i class="fas fa-bullseye"></i></div>
+            <div class="stat-value">98.84%</div>
+            <div class="stat-label">Random Forest Accuracy</div>
+            <div style="font-size:12px;color:#3b82f6;margin-top:8px;">View Dashboard →</div>
+        </div>
+    </a>
+    <a href="/dashboard" style="text-decoration:none;">
+        <div class="stat-card" style="cursor:pointer;">
+            <div class="stat-icon green"><i class="fas fa-chart-bar"></i></div>
+            <div class="stat-value">98.03%</div>
+            <div class="stat-label">Gradient Boosting Accuracy</div>
+            <div style="font-size:12px;color:#10b981;margin-top:8px;">View Dashboard →</div>
+        </div>
+    </a>
+    <a href="/dashboard" style="text-decoration:none;">
+        <div class="stat-card" style="cursor:pointer;">
+            <div class="stat-icon amber"><i class="fas fa-database"></i></div>
+            <div class="stat-value">175K</div>
+            <div class="stat-label">Training Records</div>
+            <div style="font-size:12px;color:#f59e0b;margin-top:8px;">UNSW-NB15 Dataset →</div>
+        </div>
+    </a>
+    <a href="/dashboard" style="text-decoration:none;">
+        <div class="stat-card" style="cursor:pointer;">
+            <div class="stat-icon red"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="stat-value">9</div>
+            <div class="stat-label">Attack Categories</div>
+            <div style="font-size:12px;color:#ef4444;margin-top:8px;">View Threats →</div>
+        </div>
+    </a>
+</div>
+
+<!-- Features -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:48px;">
+    <a href="/dashboard" style="text-decoration:none;">
+        <div class="card" style="padding:24px;cursor:pointer;transition:all 0.25s;">
+            <div style="width:44px;height:44px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#3b82f6;margin-bottom:16px;">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <div style="font-size:15px;font-weight:600;color:#f1f5f9;margin-bottom:8px;">Real-Time Detection</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;margin-bottom:12px;">Analyze network traffic instantly using trained ML models and get results in milliseconds.</div>
+            <div style="font-size:12px;color:#3b82f6;font-weight:500;">Start Analyzing →</div>
+        </div>
+    </a>
+
+    <a href="/dashboard" style="text-decoration:none;">
+        <div class="card" style="padding:24px;cursor:pointer;transition:all 0.25s;">
+            <div style="width:44px;height:44px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#10b981;margin-bottom:16px;">
+                <i class="fas fa-brain"></i>
+            </div>
+            <div style="font-size:15px;font-weight:600;color:#f1f5f9;margin-bottom:8px;">Dual ML Models</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;margin-bottom:12px;">Random Forest and Gradient Boosting classifiers working together for maximum accuracy.</div>
+            <div style="font-size:12px;color:#10b981;font-weight:500;">Compare Models →</div>
+        </div>
+    </a>
+
+    <a href="#mitre-table" style="text-decoration:none;">
+        <div class="card" style="padding:24px;cursor:pointer;transition:all 0.25s;">
+            <div style="width:44px;height:44px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#f59e0b;margin-bottom:16px;">
+                <i class="fas fa-map"></i>
+            </div>
+            <div style="font-size:15px;font-weight:600;color:#f1f5f9;margin-bottom:8px;">MITRE ATT&CK Mapping</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;margin-bottom:12px;">Every detected attack is mapped to its MITRE technique — T1499, T1595, T1059, T1078.</div>
+            <div style="font-size:12px;color:#f59e0b;font-weight:500;">View Framework →</div>
+        </div>
+    </a>
+
+    <a href="/dashboard" style="text-decoration:none;">
+        <div class="card" style="padding:24px;cursor:pointer;transition:all 0.25s;">
+            <div style="width:44px;height:44px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#8b5cf6;margin-bottom:16px;">
+                <i class="fas fa-clock-rotate-left"></i>
+            </div>
+            <div style="font-size:15px;font-weight:600;color:#f1f5f9;margin-bottom:8px;">Scan History</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;margin-bottom:12px;">Every analysis is logged with timestamps so you can review and audit all past scans.</div>
+            <div style="font-size:12px;color:#8b5cf6;font-weight:500;">View History →</div>
+        </div>
+    </a>
+
+    <a href="/admin" style="text-decoration:none;">
+        <div class="card" style="padding:24px;cursor:pointer;transition:all 0.25s;">
+            <div style="width:44px;height:44px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#ef4444;margin-bottom:16px;">
+                <i class="fas fa-users-gear"></i>
+            </div>
+            <div style="font-size:15px;font-weight:600;color:#f1f5f9;margin-bottom:8px;">Admin Dashboard</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;margin-bottom:12px;">Manage users, monitor scan activity, and view platform-wide threat statistics.</div>
+            <div style="font-size:12px;color:#ef4444;font-weight:500;">Admin Panel →</div>
+        </div>
+    </a>
+
+    <a href="/register" style="text-decoration:none;">
+        <div class="card" style="padding:24px;cursor:pointer;transition:all 0.25s;">
+            <div style="width:44px;height:44px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#06b6d4;margin-bottom:16px;">
+                <i class="fas fa-lock"></i>
+            </div>
+            <div style="font-size:15px;font-weight:600;color:#f1f5f9;margin-bottom:8px;">Secure by Design</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;margin-bottom:12px;">Password hashing, session management, and role-based access control built in.</div>
+            <div style="font-size:12px;color:#06b6d4;font-weight:500;">Create Account →</div>
+        </div>
+    </a>
+</div>
+
+{% endblock %}
