@@ -6,6 +6,36 @@ from datetime import datetime
 import joblib
 import numpy as np
 import os
+import gdown
+
+def download_models():
+    os.makedirs('models', exist_ok=True)
+
+    if not os.path.exists('models/rf_model.pkl'):
+        print("Downloading rf_model.pkl...")
+        gdown.download(
+            id='1gRrCh4z3bdng7nyfjGxCGUUjLiKC0nuC',
+            output='models/rf_model.pkl',
+            quiet=False
+        )
+
+    if not os.path.exists('models/gb_model.pkl'):
+        print("Downloading gb_model.pkl...")
+        gdown.download(
+            id='1kixardA5ISlJTGT5QDULbGr0OLqofJJZ',
+            output='models/gb_model.pkl',
+            quiet=False
+        )
+
+    if not os.path.exists('models/scaler.pkl'):
+        print("Downloading scaler.pkl...")
+        gdown.download(
+            id='1PqVvZBBYQp4eb1w8cjHSunA1KMw2v4Wl',
+            output='models/scaler.pkl',
+            quiet=False
+        )
+
+download_models()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'nids-secret-key-2024'
