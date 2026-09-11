@@ -1,0 +1,11 @@
+flask
+flask-sqlalchemy
+flask-login
+flask-bcrypt
+flask-wtf
+python-dotenv
+joblib
+scikit-learn==1.6.1
+numpy
+pandas
+gunicorn
