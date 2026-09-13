@@ -6,36 +6,7 @@ from datetime import datetime
 import joblib
 import numpy as np
 import os
-import gdown
-
-def download_models():
-    os.makedirs('models', exist_ok=True)
-
-    if not os.path.exists('models/rf_model.pkl'):
-        print("Downloading rf_model.pkl...")
-        gdown.download(
-            id='1gRrCh4z3bdng7nyfjGxCGUUjLiKC0nuC',
-            output='models/rf_model.pkl',
-            quiet=False
-        )
-
-    if not os.path.exists('models/gb_model.pkl'):
-        print("Downloading gb_model.pkl...")
-        gdown.download(
-            id='1kixardA5ISlJTGT5QDULbGr0OLqofJJZ',
-            output='models/gb_model.pkl',
-            quiet=False
-        )
-
-    if not os.path.exists('models/scaler.pkl'):
-        print("Downloading scaler.pkl...")
-        gdown.download(
-            id='1PqVvZBBYQp4eb1w8cjHSunA1KMw2v4Wl',
-            output='models/scaler.pkl',
-            quiet=False
-        )
-
-download_models()
+import joblib
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'nids-secret-key-2024'
@@ -47,10 +18,10 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-# Load ML Models
-rf_model  = joblib.load('models/rf_model.pkl')
-gb_model  = joblib.load('models/gb_model.pkl')
-scaler    = joblib.load('models/scaler.pkl')
+# Load ML Models (retrained on 6 dashboard features)
+rf_model = joblib.load('models/rf_model_simple.pkl')
+gb_model = joblib.load('models/gb_model_simple.pkl')
+scaler   = joblib.load('models/scaler_simple.pkl')
 
 # ── Database Models ──
 class User(db.Model, UserMixin):
@@ -146,20 +117,21 @@ def dashboard():
 def analyze():
     data = request.get_json()
 
-    inp = np.zeros((1, 43))
-    inp[0][0] = float(data.get('duration', 0))
-    inp[0][5] = float(data.get('src_pkts', 0))
-    inp[0][6] = float(data.get('dst_pkts', 0))
-    inp[0][7] = float(data.get('src_bytes', 0))
-    inp[0][8] = float(data.get('dst_bytes', 0))
-    inp[0][9] = float(data.get('rate', 0))
+    duration  = float(data.get('duration', 0))
+    src_pkts  = float(data.get('src_pkts', 0))
+    dst_pkts  = float(data.get('dst_pkts', 0))
+    src_bytes = float(data.get('src_bytes', 0))
+    dst_bytes = float(data.get('dst_bytes', 0))
+    rate      = float(data.get('rate', 0))
+
+    inp = np.array([[duration, src_pkts, dst_pkts, src_bytes, dst_bytes, rate]])
 
     inp_scaled = scaler.transform(inp)
     rf_res     = int(rf_model.predict(inp_scaled)[0])
     gb_res     = int(gb_model.predict(inp_scaled)[0])
     rf_prob    = rf_model.predict_proba(inp_scaled)[0]
     gb_prob    = gb_model.predict_proba(inp_scaled)[0]
-
+    
     src_pkts  = float(data.get('src_pkts', 0))
     src_bytes = float(data.get('src_bytes', 0))
     dst_bytes = float(data.get('dst_bytes', 0))
@@ -249,11 +221,10 @@ def delete_user(user_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        # Create admin if not exists
         admin = User.query.filter_by(email='admin@nids.com').first()
         if not admin:
             hashed = bcrypt.generate_password_hash('admin123').decode('utf-8')
-            admin  = User(
+            admin = User(
                 name='Admin',
                 email='admin@nids.com',
                 password=hashed,
@@ -262,4 +233,5 @@ if __name__ == '__main__':
             db.session.add(admin)
             db.session.commit()
             print("Admin created: admin@nids.com / admin123")
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port, debug=False)
